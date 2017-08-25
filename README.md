@@ -23,6 +23,7 @@ On Ubuntu:
     ln /usr/bin/llvm-symbolizer-4.0 /usr/bin/llvm-symbolizer
     
     git clone https://github.com/ekse/libwasm-vulnerable/
+    cd libwasm-vulnerable
     
     # build afl
     cd afl-2.49b
@@ -56,6 +57,6 @@ On Ubuntu:
 
 ## Resources
 
-http://llvm.org/docs/LibFuzzer.html
-http://lcamtuf.coredump.cx/afl/README.txt
-http://webassembly.org/docs/binary-encoding
+* http://llvm.org/docs/LibFuzzer.html
+* http://lcamtuf.coredump.cx/afl/README.txt
+* http://webassembly.org/docs/binary-encoding
