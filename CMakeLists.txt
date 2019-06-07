@@ -21,7 +21,6 @@ if(WASM_FUZZING)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=fuzzer")
     set(WASM_ASAN 1)
     set(WASM_LLVM_CODE_COVERAGE 1)
-    add_subdirectory(fuzzers)
 endif()
 
 if(WASM_LLVM_CODE_COVERAGE)
@@ -36,6 +35,10 @@ endif()
 
 if(NOT WASM_FUZZING)
     add_subdirectory(bin)
+endif()
+
+if(WASM_FUZZING)
+    add_subdirectory(fuzzers)
 endif()
 
 add_subdirectory(lib)
