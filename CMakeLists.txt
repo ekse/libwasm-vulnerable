@@ -17,22 +17,25 @@ include_directories(lib)
 
 if(WASM_FUZZING)
     add_definitions(-DWASM_FUZZING)
-    set(LIBFUZZER_LIB_PATH ${CMAKE_SOURCE_DIR}/libFuzzer.a)
-
-    # Clang 4.0 and up
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fsanitize-coverage=trace-pc-guard")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize-coverage=trace-pc-guard")
-
-    # Clang 3.9
-    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fsanitize-coverage=trace-pc")
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize-coverage=trace-pc")
-
-    # Clang 3.8
-    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fsanitize-coverage=trace-bb")
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize-coverage=trace-bb")
-
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=fuzzer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=fuzzer")
+    set(WASM_ASAN 1)
+    set(WASM_LLVM_CODE_COVERAGE 1)
     add_subdirectory(fuzzers)
 endif()
 
-add_subdirectory(bin)
+if(WASM_LLVM_CODE_COVERAGE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+endif()
+
+if(WASM_ASAN)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+endif()
+
+if(NOT WASM_FUZZING)
+    add_subdirectory(bin)
+endif()
+
 add_subdirectory(lib)
