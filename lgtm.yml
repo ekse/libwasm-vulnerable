@@ -1,2 +1,2 @@
 queries:
-  - include: cpp/*
+  - include: "*"
