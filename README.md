@@ -5,8 +5,10 @@ find the workshop slides below with the vulnerabilities at the end.
 
 https://docs.google.com/presentation/d/1Qol9ozp2-YL3OQ5YZap9jA15Q3qYUTjg3_vJdrmZcfQ/
 
+## Dependencies
+
 On Ubuntu:
-    apt install clang-8 clang-tools-8 lldb-8 libfuzzer-8-dev cmake gdb
+    apt install clang clang-tools llvm lldb libfuzzer-11-dev cmake gdb
 
 ## Building the project (libFuzzer)
 
