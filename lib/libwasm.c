@@ -412,7 +412,11 @@ int Wasm_ParseExportSection(uint8_t* buffer, uint32_t buffer_size, WasmSection* 
         entry = calloc(1, sizeof(WasmExportEntry));
 
         SAFE_READ(ReadVarUInt32(ptr, &field_len, REMAINING_SIZE()));
-        entry->field = calloc(1, field_len + 1);
+        /* Prevent integer overflow when calculating allocation size */
+        size_t alloc_size = (size_t) field_len + 1;
+        if (alloc_size <= field_len) goto parse_error;
+        entry->field = calloc(1, alloc_size);
+        if (entry->field == NULL) goto parse_error;
 
         if (((ptr + field_len) - buffer) > buffer_size)
             goto parse_error;
