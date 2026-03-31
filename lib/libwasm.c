@@ -363,10 +363,22 @@ int Wasm_ParseTypeSection(uint8_t* buffer, uint32_t buffer_size, WasmSection* se
     for (int i = 0; i < count; i++)
     {
         entry = calloc(1, sizeof(WasmFuncType));
-        entry->params = calloc(10, sizeof(WasmValueType)); // WebAssembly limits functions to 10 parameters.
 
         SAFE_READ(ReadVarInt7(ptr, &entry->form, REMAINING_SIZE()));
         SAFE_READ(ReadVarUInt32(ptr, &entry->param_count, REMAINING_SIZE()));
+/* Validate and allocate params according to declared param_count to prevent heap overflow */
+if (entry->param_count > 10)
+{
+    goto parse_error;
+}
+if (entry->param_count > 0)
+{
+    entry->params = calloc(entry->param_count, sizeof(WasmValueType));
+    if (entry->params == NULL)
+    {
+        goto parse_error;
+    }
+}
 
         if (entry->param_count > 0)
         {
